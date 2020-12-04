@@ -12,6 +12,11 @@ const color = {
   green: 'rgb(0,155,0)',
   yellow: 'rgb(255,255,0)'
 }
+const status = {
+  menu: 'MENU',
+  playing: 'PLAYING',
+  paused: 'PAUSED'
+}
 const fruit = {
   position: new Point(0, 0),
   spawn: (avoid) => {
@@ -34,48 +39,69 @@ const player = {
     player.points = 0
   }
 }
+const game = {
+  status: status.menu,
+  best: 0
+}
 
 function setListener () {
   window.addEventListener('keydown', (e) => {
-    player.movement = ['ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown'].includes(e.key) ? e.key : player.movement
+    player.movement = ['ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown'].includes(e.key) && game.status === status.playing
+      ? e.key
+      : player.movement
+    if (e.key.includes('Escape') && game.status !== status.menu) {
+      game.status = game.status === status.playing ? game.status = status.paused : game.status = status.playing
+    } else if (e.key.includes('Enter')) {
+      game.status = status.playing
+      player.reset(20)
+      fruit.spawn(player.body)
+    }
   })
 };
 
 function resetGame () {
-  player.best = player.points > (player.best || 0) ? player.points : player.best
-  player.reset(20)
-  fruit.spawn(player.body)
+  game.best = player.points > (game.best || 0) ? player.points : game.best
+  game.status = status.menu
+  if (player.points !== undefined) {
+    document.getElementById('menu').innerHTML = 'Points: ' + player.points + ' (Best: ' + game.best + ')<br>Press ENTER to start a new game'
+  }
 }
 
 function startGame () {
   setListener()
   resetGame()
   setInterval(() => {
-    movePlayer()
-    setPosition()
+    if (game.status.includes(status.playing)) {
+      movePlayer()
+      setPosition()
+      checkCollisions()
+    }
     render()
-    checkCollisions()
   }, 50)
 };
 
 function render () {
-  pointDOM.innerText = player.points
-  bestDOM.innerText = player.best || '?'
+  document.getElementById('paused').className = game.status === status.paused ? 'paused' : 'hidden'
+  document.getElementById('menu').className = game.status === status.menu ? 'paused' : 'hidden'
+  pointDOM.innerText = player.points || '0'
+  bestDOM.innerText = game.best || '0'
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
   ctx.beginPath()
   ctx.fillStyle = color.green
   ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height)
 
-  ctx.fillStyle = color.red
-  ctx.strokeStyle = color.darkred
-  ctx.arc(fruit.position.x * chunk + chunk / 2, fruit.position.y * chunk + chunk / 2, chunk / 3, 0, 2 * Math.PI, false)
-  ctx.fill()
+  if (game.status === status.playing) {
+    ctx.fillStyle = color.red
+    ctx.strokeStyle = color.darkred
+    ctx.arc(fruit.position.x * chunk + chunk / 2, fruit.position.y * chunk + chunk / 2, chunk / 3, 0, 2 * Math.PI, false)
+    ctx.fill()
 
-  player.body.forEach((coordenate) => {
-    ctx.fillStyle = color.yellow
-    ctx.fillRect(coordenate.x * chunk, coordenate.y * chunk, chunk, chunk)
-    ctx.stroke()
-  })
+    player.body.forEach((coordenate) => {
+      ctx.fillStyle = color.yellow
+      ctx.fillRect(coordenate.x * chunk, coordenate.y * chunk, chunk, chunk)
+      ctx.stroke()
+    })
+  }
 };
 
 function checkCollisions () {
