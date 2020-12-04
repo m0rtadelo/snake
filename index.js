@@ -1,5 +1,6 @@
 const width = 64
 const height = 36
+const pointDOM = document.getElementById('points')
 const canvas = document.getElementById('canvas')
 const ctx = canvas.getContext('2d')
 const chunk = canvas.width / width
@@ -56,6 +57,7 @@ function startGame () {
 };
 
 function render () {
+  pointDOM.innerText = player.points
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
   ctx.beginPath()
   ctx.fillStyle = color.green

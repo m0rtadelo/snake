@@ -8,3 +8,13 @@ body {
 body canvas {
   border: 1px solid #000000;
 }
+
+#hld-points {
+  position: absolute;
+  float: left;
+}
+
+.holder {
+  width: 960px;
+  margin:0 auto;
+}
