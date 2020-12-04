@@ -4,7 +4,11 @@ A classic Snake game in Javascript. Use the arrow keys of the keyboard to move t
 
 ## Installation
 
-Actually this project uses dependencies only for development (linter). The game itself has no dependencies. You only need to clone this repo and open the `index.html` file in a browser.
+Actually this project uses dependencies only for development (linter). The game itself has no dependencies. You only need to clone this repo and edit the `index.*` files.
+
+## Gameplay
+
+https://m0rtadelo.github.io/snake/
 
 ## Credits
 
