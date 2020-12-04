@@ -1,6 +1,7 @@
 const width = 64
 const height = 36
 const pointDOM = document.getElementById('points')
+const bestDOM = document.getElementById('best')
 const canvas = document.getElementById('canvas')
 const ctx = canvas.getContext('2d')
 const chunk = canvas.width / width
@@ -41,6 +42,7 @@ function setListener () {
 };
 
 function resetGame () {
+  player.best = player.points > (player.best || 0) ? player.points : player.best
   player.reset(20)
   fruit.spawn(player.body)
 }
@@ -58,6 +60,7 @@ function startGame () {
 
 function render () {
   pointDOM.innerText = player.points
+  bestDOM.innerText = player.best || '?'
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
   ctx.beginPath()
   ctx.fillStyle = color.green

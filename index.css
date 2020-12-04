@@ -9,12 +9,23 @@ body canvas {
   border: 1px solid #000000;
 }
 
-#hld-points {
-  position: absolute;
-  float: left;
-}
-
 .holder {
   width: 960px;
   margin:0 auto;
+  display: block;
+}
+
+.title {
+  font-size: xx-large;
+  font-weight: bold;
+}
+
+.text-left {
+  text-align: left;
+  float: left;
+}
+
+.text-right {
+  text-align: right;
+  float: right;
 }
